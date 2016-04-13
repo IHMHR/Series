@@ -14,8 +14,6 @@ namespace SeriesSolution
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.lojaTableAdapter.Fill(this.seriesDataSet1.loja);
-            this.seriadoTableAdapter.Fill(this.seriesDataSet.seriado);
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
             dateTimePicker1.CustomFormat = "dd/MM/yyyy HH:mm:ss";
 
@@ -26,6 +24,9 @@ namespace SeriesSolution
             textBox5.MaxLength = 2;
 
             label8.Visible = false;
+
+            this.lojaTableAdapter.Fill(this.seriesDataSet1.loja);
+            this.seriadoTableAdapter.Fill(this.seriesDataSet.seriado);
 
             try
             {
@@ -73,29 +74,33 @@ namespace SeriesSolution
                 {
                     try
                     {
-                        CampoVazio();
-
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder("EXECUTE usp_InserirVisita ");
-                        sb.Append("'" + dateTimePicker1.Text + "',");
-                        sb.Append(textBox1.Text.Replace(",",".") + ",");
-                        sb.Append(textBox2.Text + ",");
-                        sb.Append(textBox3.Text.Replace(",", ".") + ",");
-                        sb.Append("'" + textBox4.Text + "',");
-                        sb.Append(textBox5.Text + ",");
-                        sb.Append("'" + textBox6.Text + "',");
-                        sb.Append(comboBox2.SelectedValue.ToString() + ",");
-                        sb.Append(comboBox1.SelectedValue.ToString() + ";");
-                        //Clipboard.SetText(sb.ToString());
-                        string sql = sb.ToString();
-                        Clipboard.SetText(sql);
-                        System.Data.SqlClient.SqlCommand cm = new System.Data.SqlClient.SqlCommand(sql, con);
-                        cm.CommandType = System.Data.CommandType.StoredProcedure;
-                        con.Open();
-                        cm.ExecuteNonQuery();
-
-                        MessageBox.Show("Salvo com sucesso!");
-                        ClearFields();
-                        con.Close();
+                        if (CampoVazio())
+                        {
+                            System.Text.StringBuilder sb = new System.Text.StringBuilder("EXECUTE usp_InserirVisita ");
+                            DateTime dt = DateTime.Parse(dateTimePicker1.Text);
+                            string t = dt.ToString("yyyy-MM-dd HH:mm:ss");
+                            sb.Append("'" + t + "',");
+                            sb.Append(textBox1.Text.Replace(",", ".") + ",");
+                            sb.Append(textBox2.Text + ",");
+                            sb.Append(textBox3.Text.Replace(",", ".") + ",");
+                            sb.Append("'" + textBox4.Text + "',");
+                            sb.Append(textBox5.Text + ",");
+                            sb.Append("'" + textBox6.Text + "',");
+                            sb.Append(comboBox2.SelectedValue.ToString() + ",");
+                            sb.Append(comboBox1.SelectedValue.ToString() + ";");
+                            //Clipboard.SetText(sb.ToString());
+                            string sql = sb.ToString();
+                            //Clipboard.SetText(sql);
+                            System.Data.SqlClient.SqlCommand cm = new System.Data.SqlClient.SqlCommand(sql, con);
+                            //cm.CommandType = System.Data.CommandType.StoredProcedure;
+                            con.Open();
+                            cm.ExecuteNonQuery();
+                            con.Close();
+                            MessageBox.Show("Salvo com sucesso!");
+                            ClearFields();
+                            con.Dispose();
+                            cm.Dispose();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -118,7 +123,7 @@ namespace SeriesSolution
             label8.Visible = false;
         }
 
-        private void CampoVazio()
+        private Boolean CampoVazio()
         {
             bool[] vazio = new bool[6];
             vazio[0] = textBox1.Text.Equals(string.Empty) ? true : false;
@@ -136,7 +141,11 @@ namespace SeriesSolution
             }
 
             if (msg)
+            {
                 MessageBox.Show("Existe algum campo que não foi preenchido", "Preencher todos os campos");
+                return false;
+            }
+            return true;
         }
 
         private void textBox1_Leave(object sender, EventArgs e)
@@ -183,6 +192,13 @@ namespace SeriesSolution
         private void button3_Click(object sender, EventArgs e)
         {
             dateTimePicker1.Value = DateTime.Now;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Form2 f2 = new Form2();
+            this.Hide();
+            f2.Show();
         }
     }
 }

@@ -58,6 +58,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.seriadoTableAdapter = new SeriesSolution.seriesDataSetTableAdapters.seriadoTableAdapter();
             this.lojaTableAdapter = new SeriesSolution.seriesDataSet1TableAdapters.lojaTableAdapter();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lojaBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seriesDataSet1)).BeginInit();
@@ -67,6 +68,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.linkLabel1);
             this.groupBox1.Controls.Add(this.comboBox2);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.button3);
@@ -137,13 +139,14 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.seriadoBindingSource, "id", true));
             this.comboBox1.DataSource = this.seriadoBindingSource;
             this.comboBox1.DisplayMember = "seriado";
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(63, 41);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(297, 21);
+            this.comboBox1.Size = new System.Drawing.Size(237, 21);
             this.comboBox1.TabIndex = 16;
             this.comboBox1.ValueMember = "id";
             // 
@@ -325,6 +328,17 @@
             // 
             this.lojaTableAdapter.ClearBeforeFill = true;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(306, 44);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(60, 13);
+            this.linkLabel1.TabIndex = 20;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Nova Serie";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -377,6 +391,7 @@
         private seriesDataSet1 seriesDataSet1;
         private System.Windows.Forms.BindingSource lojaBindingSource;
         private seriesDataSet1TableAdapters.lojaTableAdapter lojaTableAdapter;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

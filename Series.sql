@@ -46,8 +46,10 @@ tipo_frete VARCHAR(35) NULL,
 tmp_frete INT NOT NULL,
 url VARCHAR(MAX) NOT NULL,
 lojaID INT NOT NULL,
+seriadoID INT NOT NULL,
 
-CONSTRAINT fk_loja FOREIGN KEY (lojaID) REFERENCES loja(id)
+CONSTRAINT fk_loja FOREIGN KEY (lojaID) REFERENCES loja(id),
+CONSTRAINT fk_seriado FOREIGN KEY (seriadoID) REFERENCES seriado(id)
 );
 GO
 
@@ -83,14 +85,15 @@ CREATE PROCEDURE usp_InserirVisita
   @tipo_frete VARCHAR(35),
   @tmp_frete INT,
   @url VARCHAR(MAX),
-  @lojaID INT
+  @lojaID INT,
+  @seriadoID INT
 AS
   BEGIN
     BEGIN TRY
 	
 	BEGIN TRAN
-	  INSERT INTO acesso (dt_acesso,vlr_Total,parcelas,vlr_Parcelas,vlr_frete,tmp_frete,tipo_frete,url,lojaID)
-	  VALUES (@dt_acesso,@vlr_Total,@parcelas,(@vlr_total/@parcelas),@vlr_frete,@tmp_frete,@tipo_frete,@url,@lojaID);
+	  INSERT INTO acesso (dt_acesso,vlr_Total,parcelas,vlr_Parcelas,vlr_frete,tmp_frete,tipo_frete,url,lojaID,seriadoID)
+	  VALUES (@dt_acesso,@vlr_Total,@parcelas,(@vlr_total/@parcelas),@vlr_frete,@tmp_frete,@tipo_frete,@url,@lojaID,@seriadoID);
 	COMMIT
 
 	END TRY
@@ -124,20 +127,24 @@ CREATE VIEW vwSeriados AS
 GO
 
 
-EXEC usp_InserirVisita '2016-04-10 21:15:00',149.90,3,9.14,'econômica',7,'http://www.americanas.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',2
-EXEC usp_InserirVisita '10/04/2016 21:15:45',149.90,3,9.14,'econômica',7,'http://www.submarino.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',1
+EXEC usp_InserirVisita '2016-04-10 21:15:00',149.90,3,9.14,'econômica',7,'http://www.americanas.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',2,7
+EXEC usp_InserirVisita '10/04/2016 21:15:45',149.90,3,9.14,'econômica',7,'http://www.submarino.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',1,7
+
 
 CREATE VIEW vwSitesAcessados AS
   SELECT
-    dt_acesso AS 'Data Acessado',
+    seriado AS 'Seriado',
+	temporadas AS 'Nº Temporadas',
+	CONVERT(CHAR(10),dt_acesso,103) AS 'Data Acessado',
 	loja AS 'Loja',
 	vlr_Total AS 'Valor Coleção',
 	parcelas AS 'Qnt Parcelas',
-	vlr_Parcelas AS 'Valor Parcelas',
+	CAST(vlr_Parcelas AS NUMERIC(6,2)) AS 'Valor Parcelas',
 	vlr_frete AS 'Valor frete',
 	tipo_frete AS 'Entrega',
-	tmp_frete AS 'Tempo de Espera',
+	CAST(tmp_frete AS VARCHAR(3)) + ' Dias úteis' AS 'Tempo de Espera',
 	url AS 'Link'
   FROM
     acesso LEFT JOIN loja ON acesso.lojaID = loja.id
+	INNER JOIN seriado ON acesso.seriadoID = seriado.id
 GO
