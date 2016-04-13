@@ -88,15 +88,15 @@ namespace SeriesSolution
                             sb.Append("'" + textBox6.Text + "',");
                             sb.Append(comboBox2.SelectedValue.ToString() + ",");
                             sb.Append(comboBox1.SelectedValue.ToString() + ";");
-                            //Clipboard.SetText(sb.ToString());
                             string sql = sb.ToString();
-                            //Clipboard.SetText(sql);
+
                             System.Data.SqlClient.SqlCommand cm = new System.Data.SqlClient.SqlCommand(sql, con);
-                            //cm.CommandType = System.Data.CommandType.StoredProcedure;
                             con.Open();
                             cm.ExecuteNonQuery();
                             con.Close();
+
                             MessageBox.Show("Salvo com sucesso!");
+
                             ClearFields();
                             con.Dispose();
                             cm.Dispose();

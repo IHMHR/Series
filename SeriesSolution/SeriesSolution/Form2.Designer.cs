@@ -177,6 +177,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(129, 20);
             this.textBox3.TabIndex = 10;
+            this.textBox3.Leave += new System.EventHandler(this.textBox3_Leave);
             // 
             // textBox4
             // 
@@ -184,6 +185,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(114, 20);
             this.textBox4.TabIndex = 11;
+            this.textBox4.Leave += new System.EventHandler(this.textBox4_Leave);
             // 
             // comboBox1
             // 
@@ -219,6 +221,7 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "Limpar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -228,6 +231,7 @@
             this.button2.TabIndex = 2;
             this.button2.Text = "Cadastrar";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form2
             // 
