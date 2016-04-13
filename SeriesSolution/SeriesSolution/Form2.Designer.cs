@@ -89,6 +89,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(53, 23);
+            this.textBox1.MaxLength = 35;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(355, 20);
             this.textBox1.TabIndex = 1;
@@ -96,6 +97,7 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(67, 49);
+            this.textBox2.MaxLength = 150;
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(341, 54);
@@ -174,6 +176,7 @@
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(78, 115);
+            this.textBox3.MaxLength = 3;
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(129, 20);
             this.textBox3.TabIndex = 10;
@@ -182,6 +185,7 @@
             // textBox4
             // 
             this.textBox4.Location = new System.Drawing.Point(294, 116);
+            this.textBox4.MaxLength = 3;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(114, 20);
             this.textBox4.TabIndex = 11;
@@ -198,6 +202,7 @@
             this.comboBox1.Size = new System.Drawing.Size(341, 21);
             this.comboBox1.TabIndex = 12;
             this.comboBox1.ValueMember = "id";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // seriesDataSet2
             // 
@@ -243,6 +248,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
             this.Load += new System.EventHandler(this.Form2_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

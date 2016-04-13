@@ -20,7 +20,10 @@ namespace SeriesSolution
         private void Form2_Load(object sender, EventArgs e)
         {
             this.situacaoTableAdapter.Fill(this.seriesDataSet2.situacao);
-
+            if (comboBox1.Text.Equals("Em andamento"))
+                dateTimePicker2.Enabled = false;
+            else
+                dateTimePicker2.Enabled = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -36,6 +39,32 @@ namespace SeriesSolution
                         if (CampoVazio())
                         {
                             System.Text.StringBuilder sb = new System.Text.StringBuilder("EXECUTE usp_InserirSeriado ");
+                            sb.Append("'" + textBox1.Text.Trim() + "',");
+                            sb.Append("'" + textBox2.Text.Replace("'","''") + "',");
+                            sb.Append(textBox3.Text + ",");
+                            sb.Append(textBox4.Text.Replace(",","." ) + ",");
+                            string first;
+                            DateTime dt = DateTime.Parse(dateTimePicker1.Text);
+                            DateTime dt2 = DateTime.Parse(dateTimePicker2.Text);
+                            first = dt.ToString("yyyy-MM-dd");
+                            sb.Append("'" + first + "',");
+                            if (!dateTimePicker2.Enabled)
+                                sb.Append("NULL,");
+                            else
+                                 sb.Append("'" + dt2.ToString("yyyy-MM-dd") + "',");
+                            sb.Append(comboBox1.SelectedValue.ToString() + ";");
+                            string sql = sb.ToString();
+
+                            System.Data.SqlClient.SqlCommand cm = new System.Data.SqlClient.SqlCommand(sql, con);
+                            con.Open();
+                            cm.ExecuteNonQuery();
+                            con.Close();
+
+                            MessageBox.Show("Salvo com sucesso!");
+
+                            ClearFields();
+                            con.Dispose();
+                            cm.Dispose();
                         }
                     }
                     catch (Exception ex)
@@ -99,6 +128,20 @@ namespace SeriesSolution
                 return false;
             }
             return true;
+        }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Form1 f1 = new Form1();
+            f1.Show();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.Text.Equals("Em andamento"))
+                dateTimePicker2.Enabled = false;
+            else
+                dateTimePicker2.Enabled = true;
         }
     }
 }
