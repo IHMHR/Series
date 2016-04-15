@@ -200,5 +200,17 @@ namespace SeriesSolution
             this.Hide();
             f2.Show();
         }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Form3 f3 = new Form3();
+            this.Hide();
+            f3.Show();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
