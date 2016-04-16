@@ -20,7 +20,24 @@ namespace SeriesSolution
         {
             using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
             {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                sb.Append("INSERT INTO loja (loja,telefone) VALUES (");
+                sb.Append("'" + textBox1.Text + "',");
+                sb.Append("'" + textBox2.Text + "'");
+                sb.Append(");");
 
+                System.Data.SqlClient.SqlCommand cm = new System.Data.SqlClient.SqlCommand(sb.ToString(), con);
+                con.Open();
+                cm.ExecuteNonQuery();
+                con.Close();
+
+                MessageBox.Show("Salvo com sucesso!");
+
+                con.Dispose();
+                cm.Dispose();
+
+                textBox1.Clear();
+                textBox2.Clear();
             }
         }
 
