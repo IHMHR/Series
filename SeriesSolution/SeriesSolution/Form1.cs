@@ -70,13 +70,13 @@ namespace SeriesSolution
                 MessageBox.Show("Existe algum campo que não foi preenchido", "Preencher todos os campos");
             else
             {
-                using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
-                {
+                //using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
+                //{
                     try
                     {
                         if (CampoVazio())
                         {
-                            System.Text.StringBuilder sb = new System.Text.StringBuilder("EXECUTE usp_InserirVisita ");
+                            /*System.Text.StringBuilder sb = new System.Text.StringBuilder("EXECUTE usp_InserirVisita ");
                             DateTime dt = DateTime.Parse(dateTimePicker1.Text);
                             string t = dt.ToString("yyyy-MM-dd HH:mm:ss");
                             sb.Append("'" + t + "',");
@@ -99,14 +99,31 @@ namespace SeriesSolution
 
                             ClearFields();
                             con.Dispose();
-                            cm.Dispose();
+                            cm.Dispose();*/
+
+                            Classes.ClsAcesso ac = new Classes.ClsAcesso();
+
+                            ac.dtAcesso = DateTime.Parse(dateTimePicker1.Text);
+                            ac.LojaID = (int)comboBox2.SelectedValue;
+                            ac.parcelas = int.Parse(textBox2.Text);
+                            ac.SeriadoID = (int)comboBox1.SelectedValue;
+                            ac.tempoFrete = int.Parse(textBox5.Text);
+                            ac.tipoFrete = textBox4.Text;
+                            ac.url = textBox6.Text.Trim();
+                            ac.vlrFrete = double.Parse(textBox3.Text);
+                            ac.vlrTotal = double.Parse(textBox1.Text);
+
+                            ac.Inserir();
+
+                            MessageBox.Show("Salvo com sucesso !");
+                            ClearFields();
                         }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message.ToString());
                     }
-                }
+                //}
             }
         }
 

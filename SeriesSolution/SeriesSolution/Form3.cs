@@ -18,7 +18,7 @@ namespace SeriesSolution
 
         private void button2_Click(object sender, EventArgs e)
         {
-            using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
+            /*using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.Append("INSERT INTO loja (loja,telefone) VALUES (");
@@ -38,7 +38,19 @@ namespace SeriesSolution
 
                 textBox1.Clear();
                 textBox2.Clear();
-            }
+            }*/
+
+            Classes.ClsLoja lj = new Classes.ClsLoja();
+
+            lj.loja = textBox1.Text;
+            lj.telefone = textBox2.Text;
+
+            lj.InserirLoja();
+
+            MessageBox.Show("Salvo com sucesso!");
+
+            textBox1.Clear();
+            textBox2.Clear();
         }
 
         private void button1_Click(object sender, EventArgs e)

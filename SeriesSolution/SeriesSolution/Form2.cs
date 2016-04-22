@@ -32,7 +32,7 @@ namespace SeriesSolution
                 MessageBox.Show("Existe algum campo que não foi preenchido", "Preencher todos os campos");
             else
             {
-                using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
+                /*using (System.Data.SqlClient.SqlConnection con = new System.Data.SqlClient.SqlConnection(@"Data Source=MARTINELLI-07\SQLEXPRESS;Initial Catalog=series;Integrated Security=True"))
                 {
                     try
                     {
@@ -71,7 +71,23 @@ namespace SeriesSolution
                     {
                         MessageBox.Show(ex.Message.ToString());
                     }
-                }
+                }*/
+                Classes.ClsSerie sr = new Classes.ClsSerie();
+
+                sr.seriado = textBox1.Text.Trim();
+                sr.descricao = textBox2.Text.Replace("'", "''");
+                sr.temporadas = int.Parse(textBox3.Text);
+                sr.nota = double.Parse(textBox4.Text);
+                sr.dtLancamento = DateTime.Parse(dateTimePicker1.Text);
+                if (dateTimePicker2.Enabled)
+                    sr.dtUltimoEpisodio = DateTime.Parse(dateTimePicker2.Text);
+                sr.situacaoID = (int)comboBox1.SelectedValue;
+
+                sr.InserirSerie();
+
+                MessageBox.Show("Salvo com sucesso!");
+
+                ClearFields();
             }
         }
 
