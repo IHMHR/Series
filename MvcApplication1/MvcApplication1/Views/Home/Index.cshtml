@@ -1,0 +1,22 @@
+﻿@model MvcApplication1.Models.Pessoa
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Lista","Home",FormMethod.Post)) { 
+    <fieldset>
+        <legend> Pessoa </legend>
+        <div>
+            @Html.LabelFor(x => x.PessoaId)
+            @Html.EditorFor(x => x.PessoaId)
+            <br />
+            @Html.LabelFor(x => x.Nome)
+            @Html.EditorFor(x => x.Nome)
+            <br />
+            @Html.LabelFor(x => x.Twitter)
+            @Html.EditorFor(x => x.Twitter)
+            <br />
+            <input type="submit" value="Enviar" />
+        </div>
+    </fieldset>
+}

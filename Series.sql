@@ -131,16 +131,16 @@ EXEC usp_InserirVisita '2016-04-10 21:15:00',149.90,3,9.14,'econômica',7,'http:/
 EXEC usp_InserirVisita '10/04/2016 21:15:45',149.90,3,9.14,'econômica',7,'http://www.submarino.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',1,7
 
 
-CREATE VIEW vwSitesAcessados AS
+ALTER VIEW vwSitesAcessados AS
   SELECT
     seriado AS 'Seriado',
 	temporadas AS 'Nº Temporadas',
 	CONVERT(CHAR(10),dt_acesso,103) AS 'Data Acessado',
 	loja AS 'Loja',
-	vlr_Total AS 'Valor Coleção',
+	'R$ ' + CAST(vlr_Total AS VARCHAR) AS'Valor Coleção',
 	parcelas AS 'Qnt Parcelas',
-	CAST(vlr_Parcelas AS NUMERIC(6,2)) AS 'Valor Parcelas',
-	vlr_frete AS 'Valor frete',
+	'R$ ' + CAST(CAST(vlr_Parcelas AS DECIMAL(9,2)) AS VARCHAR) AS 'Valor Parcelas',
+	'R$ ' + CAST(vlr_frete AS VARCHAR) AS 'Valor frete',
 	tipo_frete AS 'Entrega',
 	CAST(tmp_frete AS VARCHAR(3)) + ' Dias úteis' AS 'Tempo de Espera',
 	url AS 'Link'
