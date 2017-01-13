@@ -1,33 +1,41 @@
-/*USE master;
-Drop DATABASE series;*/
---CREATE DATABASE series;
+USE master;
+
+IF EXISTS(SELECT 1 FROM sys.databases WHERE name = 'series')
+BEGIN
+    ALTER DATABASE series SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE series;
+END
+
+CREATE DATABASE series;
+GO
+
 USE series;
 GO
 
 CREATE TABLE situacao (
-id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+idsituacao INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 situacao VARCHAR(20) NOT NULL
 );
 GO
 
-INSERT INTO situacao (situacao) VALUES ('Em andamento'),('Cancelada'),('Concluída'),('Em Produção');
+INSERT INTO situacao (situacao) VALUES ('Em andamento'),('Cancelada'),('ConcluÃ­da'),('Em ProduÃ§Ã£o');
 
 CREATE TABLE seriado (
-id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+idseriado INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 seriado VARCHAR(35) NOT NULL,
 descricao VARCHAR(150) NOT NULL,
 temporadas SMALLINT NOT NULL,
 imdb_nota NUMERIC(3,1) NOT NULL,
 lancamento_data DATE NOT NULL,
 ultima_exibicao DATE NULL,
-situacaoID INT NOT NULL,
+situacao_idsituacao INT NOT NULL,
 
-CONSTRAINT fk_Situacao FOREIGN KEY (situacaoID) REFERENCES situacao(id)
+CONSTRAINT fk_Situacao FOREIGN KEY (situacao_idsituacao) REFERENCES situacao(idsituacao)
 );
 GO
 
 CREATE TABLE loja (
-id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+idloja INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 loja VARCHAR(35) NOT NULL,
 telefone VARCHAR(20) NOT NULL,
 );
@@ -45,11 +53,11 @@ vlr_frete DECIMAL(12,2) NOT NULL,
 tipo_frete VARCHAR(35) NULL,
 tmp_frete INT NOT NULL,
 url VARCHAR(MAX) NOT NULL,
-lojaID INT NOT NULL,
-seriadoID INT NOT NULL,
+loja_idloja INT NOT NULL,
+seriado_idseriado INT NOT NULL,
 
-CONSTRAINT fk_loja FOREIGN KEY (lojaID) REFERENCES loja(id),
-CONSTRAINT fk_seriado FOREIGN KEY (seriadoID) REFERENCES seriado(id)
+CONSTRAINT fk_loja FOREIGN KEY (loja_idloja) REFERENCES loja(idloja),
+CONSTRAINT fk_seriado FOREIGN KEY (seriado_idseriado) REFERENCES seriado(idseriado)
 );
 GO
 
@@ -66,7 +74,7 @@ AS
     BEGIN TRY
 
 	BEGIN TRAN
-	  INSERT INTO seriado (seriado,descricao,temporadas,imdb_nota,lancamento_data,ultima_exibicao,situacaoID)
+	  INSERT INTO seriado (seriado,descricao,temporadas,imdb_nota,lancamento_data,ultima_exibicao,situacao_idsituacao)
 	  VALUES (@seriado,@descricao,@temporadas,@imdb_nota,@lancamento_data,@ultima_exibicao,@situacaoID);
 	COMMIT
 
@@ -92,14 +100,14 @@ AS
     BEGIN TRY
 	
 	BEGIN TRAN
-	  INSERT INTO acesso (dt_acesso,vlr_Total,parcelas,vlr_Parcelas,vlr_frete,tmp_frete,tipo_frete,url,lojaID,seriadoID)
+	  INSERT INTO acesso (dt_acesso,vlr_Total,parcelas,vlr_Parcelas,vlr_frete,tmp_frete,tipo_frete,url,lojaID,seriado_idseriado)
 	  VALUES (@dt_acesso,@vlr_Total,@parcelas,(@vlr_total/@parcelas),@vlr_frete,@tmp_frete,@tipo_frete,@url,@lojaID,@seriadoID);
 	COMMIT
 
 	END TRY
 	BEGIN CATCH
 	  ROLLBACK TRAN;
-	  SELECT ERROR_MESSAGE() AS 'Erro na transação';
+	  SELECT ERROR_MESSAGE() AS 'Erro na transaÃ§Ã£o';
 	END CATCH
   END
 GO
@@ -116,35 +124,35 @@ EXEC usp_InserirSeriado 'Prison Break','Due to a political conspiracy, an innoce
 CREATE VIEW vwSeriados AS
   SELECT
     seriado AS Seriado,
-	descricao AS Descrição,
-	temporadas AS 'Nº Temporadas',
+	descricao AS DescriÃ§Ã£o,
+	temporadas AS 'NÂº Temporadas',
 	imdb_nota AS 'Nota IMDB',
-	CONVERT(VARCHAR(12),lancamento_data, 103) AS 'Data Lançamento',
-	CONVERT(VARCHAR(12),ultima_exibicao, 103) AS 'Ultima exibição',
-	situacao AS Situação
+	CONVERT(VARCHAR(12),lancamento_data, 103) AS 'Data LanÃ§amento',
+	CONVERT(VARCHAR(12),ultima_exibicao, 103) AS 'Ultima exibiÃ§Ã£o',
+	situacao AS SituaÃ§Ã£o
   FROM
     seriado LEFT JOIN situacao ON seriado.situacaoID = situacao.id
 GO
 
 
-EXEC usp_InserirVisita '2016-04-10 21:15:00',149.90,3,9.14,'econômica',7,'http://www.americanas.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',2,7
-EXEC usp_InserirVisita '10/04/2016 21:15:45',149.90,3,9.14,'econômica',7,'http://www.submarino.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',1,7
+EXEC usp_InserirVisita '2016-04-10 21:15:00',149.90,3,9.14,'econÃ´mica',7,'http://www.americanas.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',2,7
+EXEC usp_InserirVisita '10/04/2016 21:15:45',149.90,3,9.14,'econÃ´mica',7,'http://www.submarino.com.br/produto/122339441/dvd-prison-break-a-colecao-completa-incluindo-o-resgate-final-23-discos-',1,7
 
 
 ALTER VIEW vwSitesAcessados AS
   SELECT
     seriado AS 'Seriado',
-	temporadas AS 'Nº Temporadas',
+	temporadas AS 'NÂº Temporadas',
 	CONVERT(CHAR(10),dt_acesso,103) AS 'Data Acessado',
 	loja AS 'Loja',
-	'R$ ' + CAST(vlr_Total AS VARCHAR) AS'Valor Coleção',
+	'R$ ' + CAST(vlr_Total AS VARCHAR) AS'Valor ColeÃ§Ã£o',
 	parcelas AS 'Qnt Parcelas',
 	'R$ ' + CAST(CAST(vlr_Parcelas AS DECIMAL(9,2)) AS VARCHAR) AS 'Valor Parcelas',
 	'R$ ' + CAST(vlr_frete AS VARCHAR) AS 'Valor frete',
 	tipo_frete AS 'Entrega',
-	CAST(tmp_frete AS VARCHAR(3)) + ' Dias úteis' AS 'Tempo de Espera',
+	CAST(tmp_frete AS VARCHAR(3)) + ' Dias Ãºteis' AS 'Tempo de Espera',
 	url AS 'Link'
   FROM
-    acesso LEFT JOIN loja ON acesso.lojaID = loja.id
-	INNER JOIN seriado ON acesso.seriadoID = seriado.id
+    acesso LEFT JOIN loja ON acesso.loja_idloja = loja.idloja
+	INNER JOIN seriado ON acesso.seriado_idseriado = seriado.idseriado
 GO
